@@ -2,8 +2,11 @@ name: Build Desktop App
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
+  pull_request:
   workflow_dispatch:
     inputs:
       version:
@@ -24,10 +27,24 @@ jobs:
             asset_name: AgentService-macos-x64.zip
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "value=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          elif [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=dev-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -40,28 +57,35 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Verify tkinter available
+        run: |
+          python -c "import tkinter; print('tk OK')"
+
       - name: Build with PyInstaller
         run: |
           pyinstaller build/agent_service.spec --noconfirm
 
       - name: Package Windows exe
         if: matrix.os == 'windows-latest'
-        shell: bash
         run: |
-          mv "dist/AgentService.exe" "dist/${{ matrix.asset_name }}"
+          ASSET_NAME="AgentService-${{ steps.version.outputs.value }}-windows-x64.exe"
+          echo "ASSET_NAME=$ASSET_NAME" >> "$GITHUB_ENV"
+          mv "dist/AgentService.exe" "dist/$ASSET_NAME"
 
       - name: Package Mac app
         if: matrix.os == 'macos-latest'
         run: |
+          ASSET_NAME="AgentService-${{ steps.version.outputs.value }}-macos-x64.zip"
+          echo "ASSET_NAME=$ASSET_NAME" >> "$GITHUB_ENV"
           cd dist
-          zip -r "${{ matrix.asset_name }}" AgentService.app
+          zip -r "$ASSET_NAME" AgentService.app
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.asset_name }}
+          name: ${{ env.ASSET_NAME }}
           path: |
-            dist/${{ matrix.asset_name }}
+            dist/${{ env.ASSET_NAME }}
           if-no-files-found: error
 
       - name: Upload to Release
@@ -69,6 +93,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/${{ matrix.asset_name }}
+            dist/${{ env.ASSET_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
