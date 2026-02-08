@@ -5,17 +5,14 @@ from collections.abc import AsyncGenerator
 from typing import Any
 
 from agno.agent import Agent, RunEvent
-from agno.models.deepseek import DeepSeek
 from agno.db.sqlite import SqliteDb
+from agno.models.deepseek import DeepSeek
 
-# Load API key from config (which reads from .env or environment)
-try:
-    from app.config import DEEPSEEK_API_KEY
+from app.credentials import load_deepseek_api_key
 
-    if DEEPSEEK_API_KEY:
-        os.environ["DEEPSEEK_API_KEY"] = DEEPSEEK_API_KEY
-except Exception:
-    pass
+key = load_deepseek_api_key()
+if key and not os.getenv("DEEPSEEK_API_KEY"):
+    os.environ["DEEPSEEK_API_KEY"] = key
 
 
 class AgentService:
