@@ -1,18 +1,19 @@
 """Application configuration.
 
-Design choice: embed the Anthropic API key in code so end-users don't need to
-configure environment variables at runtime.
-
-Do not commit real secrets to the repository; replace the placeholder during a
-private build, or inject it at build time.
+Loads configuration from environment variables and .env file.
+For production builds, set DEEPSEEK_API_KEY environment variable before compilation.
 """
 
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env file if it exists
+load_dotenv()
+
 # API Configuration
-# NOTE: Replace this placeholder for production builds.
-ANTHROPIC_API_KEY = "sk-ant-REPLACE_ME"
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 
 # Server Configuration
 HOST = "127.0.0.1"

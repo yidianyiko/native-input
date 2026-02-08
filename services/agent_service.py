@@ -5,17 +5,16 @@ from collections.abc import AsyncGenerator
 from typing import Any
 
 from agno.agent import Agent, RunEvent
-from agno.models.anthropic import Claude
+from agno.models.deepseek import DeepSeek
 from agno.db.sqlite import SqliteDb
 
-# Set API key from embedded app config if available.
+# Load API key from config (which reads from .env or environment)
 try:
-    from app.config import ANTHROPIC_API_KEY
+    from app.config import DEEPSEEK_API_KEY
 
-    if ANTHROPIC_API_KEY and ANTHROPIC_API_KEY != "sk-ant-REPLACE_ME":
-        os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
+    if DEEPSEEK_API_KEY:
+        os.environ["DEEPSEEK_API_KEY"] = DEEPSEEK_API_KEY
 except Exception:
-    # App packaging code paths shouldn't break server import.
     pass
 
 
@@ -26,7 +25,7 @@ class AgentService:
 
     def _create_agent(self, user_id: str) -> Agent:
         return Agent(
-            model=Claude(id="claude-sonnet-4-5"),
+            model=DeepSeek(id="deepseek-chat"),
             db=self._db,
             add_history_to_context=True,
             num_history_runs=5,
