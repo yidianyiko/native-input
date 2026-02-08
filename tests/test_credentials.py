@@ -16,3 +16,11 @@ def test_save_then_load_roundtrip(tmp_path, monkeypatch):
 
     credentials.save_deepseek_api_key("k123")
     assert credentials.load_deepseek_api_key() == "k123"
+
+
+def test_env_overrides_settings(tmp_path, monkeypatch):
+    monkeypatch.setattr(credentials, "get_app_data_dir", lambda: tmp_path)
+    credentials.save_deepseek_api_key("file_key")
+
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "env_key")
+    assert credentials.load_deepseek_api_key() == "env_key"
