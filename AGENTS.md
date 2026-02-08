@@ -53,5 +53,5 @@ Notes:
 
 ## Security & Configuration Tips
 
-- Do not commit secrets. DeepSeek credentials may be read from environment (`DEEPSEEK_API_KEY`) in dev; see `.env.example`.
+- Do not commit secrets. In dev, DeepSeek credentials may be read from environment (`DEEPSEEK_API_KEY`) / `.env` (see `.env.example`). In the desktop tray app, the key can be set via tray menu and is persisted to an app-data `settings.json`.
 - The agent stores memory in a local SQLite file (`agent_memory.db` by default).

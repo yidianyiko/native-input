@@ -6,7 +6,7 @@
 
 ## 需求
 
-- **API Key**: 写死在代码中，用户无需配置
+- **API Key**: 托盘菜单弹窗输入并保存到本机配置文件（`settings.json`），用户无需设置环境变量
 - **运行方式**: 系统托盘应用，右键菜单可退出
 - **端口**: 固定 18080
 - **开机自启**: 默认启用
@@ -133,14 +133,17 @@ AgentService-{version}-macos-x64.zip
 
 ## 配置
 
-### 固定配置 (写死)
+### 固定配置
 
 ```python
 # config.py
-API_KEY = "sk-ant-xxxxx"  # Anthropic API Key
 PORT = 18080              # 服务端口
 HOST = "127.0.0.1"        # 只监听本地
 ```
+
+### 用户配置 (本机保存)
+
+- `DeepSeek API Key`: 通过托盘菜单 `设置 API Key...` 弹窗输入后保存到应用数据目录下的 `settings.json`
 
 ## 依赖更新
 
