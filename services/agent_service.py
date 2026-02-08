@@ -1,4 +1,5 @@
 # services/agent_service.py
+import os
 import asyncio
 from collections.abc import AsyncGenerator
 from typing import Any
@@ -6,6 +7,16 @@ from typing import Any
 from agno.agent import Agent, RunEvent
 from agno.models.anthropic import Claude
 from agno.db.sqlite import SqliteDb
+
+# Set API key from embedded app config if available.
+try:
+    from app.config import ANTHROPIC_API_KEY
+
+    if ANTHROPIC_API_KEY and ANTHROPIC_API_KEY != "sk-ant-REPLACE_ME":
+        os.environ["ANTHROPIC_API_KEY"] = ANTHROPIC_API_KEY
+except Exception:
+    # App packaging code paths shouldn't break server import.
+    pass
 
 
 class AgentService:
