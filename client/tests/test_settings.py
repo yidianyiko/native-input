@@ -1,8 +1,3 @@
-import json
-from pathlib import Path
-
-import pytest
-
 from config.settings import Settings, get_default_settings, load_settings, save_settings
 
 
