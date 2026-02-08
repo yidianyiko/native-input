@@ -1,0 +1,33 @@
+# config/prompts.yaml
+roles:
+  work_email:
+    name: "工作邮件"
+    description: "正式商务场景"
+  social_chat:
+    name: "社交聊天"
+    description: "轻松日常对话"
+  tech_writing:
+    name: "技术写作"
+    description: "技术文档和代码相关"
+
+buttons:
+  polish:
+    name: "润色"
+    prompts:
+      work_email: "请用正式商务语气润色以下内容，保持专业性：\n\n{text}"
+      social_chat: "请用轻松友好的语气润色以下内容：\n\n{text}"
+      tech_writing: "请润色以下技术内容，保持准确性和清晰度：\n\n{text}"
+
+  expand:
+    name: "扩写"
+    prompts:
+      work_email: "请扩展以下内容，补充必要的商务细节：\n\n{text}"
+      social_chat: "请扩展以下内容，使其更生动有趣：\n\n{text}"
+      tech_writing: "请扩展以下技术内容，补充必要的说明和示例：\n\n{text}"
+
+  translate:
+    name: "翻译"
+    prompts:
+      work_email: "请将以下内容翻译成专业的商务英语：\n\n{text}"
+      social_chat: "请将以下内容翻译成地道的日常英语：\n\n{text}"
+      tech_writing: "请将以下内容翻译成准确的技术英语：\n\n{text}"
