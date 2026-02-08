@@ -5,7 +5,7 @@ from pathlib import Path
 block_cipher = None
 
 # build/agent_service.spec lives under build/, so project root is parent of SPECPATH.
-ROOT = Path(SPECPATH).parent.parent
+ROOT = Path(SPECPATH).parent
 
 # Collect all data files
 datas = [
