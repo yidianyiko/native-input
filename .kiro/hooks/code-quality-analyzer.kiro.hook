@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Code Quality Analyzer",
+  "description": "Monitors source code files for changes and analyzes modified code for potential improvements including code smells, design patterns, and best practices. Generates suggestions for improving code quality while maintaining existing functionality, focusing on readability, maintainability, and performance optimizations.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.py",
+      "tests/**/*.py",
+      "scripts/**/*.py",
+      "main.py"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the modified Python code for potential improvements. Focus on:\n\n1. **Code Smells**: Identify long methods, large classes, duplicate code, complex conditionals, and other maintainability issues\n2. **Design Patterns**: Suggest appropriate design patterns that could improve the code structure\n3. **Best Practices**: Check for Python best practices, PEP 8 compliance, proper error handling, and documentation\n4. **Performance**: Identify potential performance bottlenecks and suggest optimizations\n5. **Readability**: Suggest improvements for variable naming, function structure, and code organization\n6. **Maintainability**: Recommend changes that would make the code easier to maintain and extend\n\nFor each suggestion:\n- Explain the current issue clearly\n- Provide a specific improvement recommendation\n- Show a code example if helpful\n- Explain the benefits of the suggested change\n- Ensure the suggestion maintains existing functionality\n\nConsider the project context: This is an AI-powered input method tool using PySide6, AGNO framework, and Windows system integration. The code should follow the established patterns and architecture of the project."
+  }
+}

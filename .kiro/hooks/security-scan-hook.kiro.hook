@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "name": "Security Vulnerability Scanner",
+  "description": "Automatically reviews changed files for potential security issues including API keys, credentials, private keys, authentication tokens, passwords, IP addresses, internal URLs, and database connections. Provides security risk analysis and remediation suggestions.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*.py",
+      "scripts/**/*.py",
+      "tests/**/*.py",
+      "*.py",
+      "config.json",
+      ".env",
+      ".env.example",
+      "resources/config/**/*",
+      "**/*.json",
+      "**/*.yaml",
+      "**/*.yml",
+      "**/*.toml",
+      "**/*.ini",
+      "**/*.cfg"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review the changed files for potential security issues. For each file, scan for:\n\n1. **API Keys & Tokens**: Look for patterns like API_KEY, TOKEN, SECRET, BEARER, etc.\n2. **Private Keys**: Search for RSA, SSH, PEM keys, certificates\n3. **Encryption Keys**: Find hardcoded encryption keys, salts, initialization vectors\n4. **Authentication Tokens**: Identify session IDs, JWT tokens, OAuth tokens\n5. **Passwords & Secrets**: Detect hardcoded passwords, secrets in configuration\n6. **Sensitive IP Addresses**: Flag internal/private IP ranges that shouldn't be exposed\n7. **Internal URLs**: Find hardcoded internal URLs, database endpoints\n8. **Database Credentials**: Identify connection strings, database passwords\n\nFor each security issue found:\n- **Highlight the specific risk** and potential impact\n- **Suggest secure alternatives** (environment variables, key management systems, etc.)\n- **Recommend security best practices** for the specific type of credential\n- **Provide code examples** of secure implementation where applicable\n\nFocus on practical, actionable security guidance that follows the project's existing patterns (using .env files, config.json structure, etc.)."
+  }
+}

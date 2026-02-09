@@ -1,0 +1,63 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache
+# Virtual environments
+.venv
+.figma
+# Environment variables (contains API keys)
+.env
+.env.local
+.env.production
+.env.staging
+.env.development
+# Backup environment files
+.env.*.bak
+
+# Logs
+*.log
+logs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+.*cache*
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test artifacts and temporary files
+test_*.py
+debug_*.py
+final_*.py
+*_test_summary.md
+*_debug.py
+*_temp.py
+*.bak
+*.tmp
+*~
+releases/
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+backups
+.*cache*
+
+# Sensitive data
+settings.toml
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Binary artifacts
+installer/*.exe

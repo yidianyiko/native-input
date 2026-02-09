@@ -1,0 +1,67 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+
+a = Analysis(
+    ['src\\main.py'],
+    pathex=[],
+    binaries=[],
+    datas=[
+        ('app.ico', '.'),
+        ('settings.toml.example', '.'),
+        ('resources', 'resources'),
+    ],
+    hiddenimports=[
+        'agno',
+        'PySide6.QtCore',
+        'PySide6.QtGui', 
+        'PySide6.QtWidgets',
+        'win32api',
+        'win32con',
+        'win32gui',
+        'cryptography',
+        'httpx',
+        'pyperclip',
+        'dynaconf',
+        'toml',
+        'dotenv',
+        'pynput',
+        'pynput.keyboard',
+        'pynput.mouse',
+        'pynput.keyboard._win32',
+        'pynput.mouse._win32',
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[
+        'matplotlib',
+        'PyQt5',
+        'tkinter',
+        'test',
+        'unittest',
+    ],
+    noarchive=False,
+    optimize=0,
+)
+pyz = PYZ(a.pure)
+
+exe = EXE(
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.datas,
+    [],
+    name='reInput',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=False,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+)

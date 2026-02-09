@@ -1,0 +1,45 @@
+[hotkeys]
+show_floating_window = "win+shift +o"
+
+[ai_services]
+default_provider = "deepseek"
+current_model = "gpt-4"
+
+[auth]
+frontend_url = "http://localhost:5174"
+
+[system]
+auto_start = true
+
+[logging]
+level = "INFO"
+
+[ui.system_tray]
+minimize_to_tray = true
+show_notifications = true
+
+[providers.openai]
+api_key = "sk-proj-A"
+
+[providers.deepseek]
+api_key = "sk-2"
+
+[agents.translation]
+enabled = true
+name = "翻译助手"
+prompt = "Create optimized prompts for [Application] [Source] using advanced prompt engineering frameworks. 要求1：保持原语言, 删除语气助词，删除对 Application 无用的词汇，增加对。要求2：Polish and improve the given text for clarity and readability. 要求3： Only return the improved text, no explanations."
+max_tokens = 1000
+
+[agents.polish]
+enabled = true
+name = "Prompt Generator"
+prompt = "Create optimized prompts for Claude 4 models using advanced prompt engineering frameworks. 要求1：保持原文。要求2：Polish and improve the given text for clarity and readability.要求3： Only return the improved text, no explanations."
+temperature = 0.3
+max_tokens = 1000
+
+[agents.correction]
+enabled = true
+name = "纠错助手"
+prompt = "You are a professional proofreader. Correct grammar and spelling errors in the given text. IMPORTANT: Keep the text in its original language - do not translate. Only return the corrected text, no explanations."
+temperature = 0.3
+max_tokens = 1000

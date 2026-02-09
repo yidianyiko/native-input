@@ -1,0 +1,33 @@
+{
+  "channels": [
+    {
+      "name": "stable",
+      "url": "https://api.github.com/repos/ai-input-method/ai-input-method/releases/latest",
+      "enabled": true,
+      "check_interval_hours": 24,
+      "description": "Stable releases with full testing"
+    },
+    {
+      "name": "beta",
+      "url": "https://api.github.com/repos/ai-input-method/ai-input-method/releases?prerelease=true",
+      "enabled": false,
+      "check_interval_hours": 12,
+      "description": "Beta releases for early testing"
+    },
+    {
+      "name": "nightly",
+      "url": "https://api.github.com/repos/ai-input-method/ai-input-method/releases?prerelease=true&per_page=1",
+      "enabled": false,
+      "check_interval_hours": 6,
+      "description": "Nightly builds (experimental)"
+    }
+  ],
+  "settings": {
+    "auto_check": true,
+    "auto_download": false,
+    "auto_install": false,
+    "check_on_startup": true,
+    "notify_critical_updates": true,
+    "skip_versions": []
+  }
+}

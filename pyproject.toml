@@ -1,0 +1,154 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reInput"
+version = "0.02"
+description = "AI-powered input method tool for Windows"
+readme = "scripts/README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "AI Input Method Team"},
+]
+keywords = ["ai", "input-method", "translation", "text-processing"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "agno>=1.7.12",
+    "pyside6>=6.9.1",
+    "pywin32>=311; sys_platform=='win32'",
+    "python-dotenv>=1.1.1",
+    # 移除 websockets 和 pyaudio - AGNO 会处理音频
+    # "websockets>=12.0",  # 不再需要自定义 WebSocket 连接
+    # "pyaudio>=0.2.11",   # 不再需要直接音频设备访问
+    "httpx>=0.25.0",
+    "pyperclip>=1.8.2",
+    "dynaconf>=3.2.0",
+    "toml>=0.10.2",
+    "cryptography>=45.0.7",
+    "loguru>=0.7.3",
+    "pynput>=1.8.1",
+    "requests>=2.32.5",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.34.0",
+    "openai>=2.17.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "mypy>=1.17.1",
+    "pytest>=8.4.1",
+    "pytest-cov>=4.0.0",
+    "pyinstaller>=6.0.0",
+    "tomli>=2.0.0; python_version<'3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.com/ai-input-method/ai-input-method"
+Repository = "https://github.com/ai-input-method/ai-input-method.git"
+Issues = "https://github.com/ai-input-method/ai-input-method/issues"
+
+[project.scripts]
+ai-input-method = "src.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "ANN", # flake8-annotations
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "ANN101", # missing type annotation for self in method
+    "ANN102", # missing type annotation for cls in classmethod
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*.py" = ["ANN", "ARG", "S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[dependency-groups]
+dev = [
+    "autoflake>=2.3.1",
+    "autotyping>=24.9.0",
+    "bandit>=1.8.6",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "monkeytype>=23.3.0",
+    "mypy>=1.17.1",
+    "pyinstaller>=6.15.0",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.12.11",
+    "tomli>=2.0.0 ; python_full_version < '3.11'",
+    "vulture>=2.14",
+]
