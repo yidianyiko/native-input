@@ -16,13 +16,13 @@ class TestMainApp:
         assert response.json()["status"] == "ok"
 
     def test_process_endpoint_exists(self, client):
-        # Should return 409 (no WS connection) not 404
+        # Should return 200 even without WS connection.
         response = client.post("/api/process", json={
             "text": "test",
             "button_number": 1,
             "role_number": 1
         })
-        assert response.status_code == 409
+        assert response.status_code == 200
 
     def test_cancel_endpoint_exists(self, client):
         response = client.post("/api/cancel", json={

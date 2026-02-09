@@ -49,7 +49,7 @@ class TestIntegration:
                 "button_number": 1,
                 "role_number": 1
             })
-            assert response.status_code == 409
+            assert response.status_code == 200
 
     def test_cancel_flow(self):
         with TestClient(app) as client:

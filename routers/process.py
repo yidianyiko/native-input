@@ -111,13 +111,6 @@ async def process(
     pl: PromptLoader = Depends(get_prompt_loader),
     agent: AgentService = Depends(get_agent_service),
 ):
-    # Check WebSocket connection exists
-    if not cm.has_connection(DEFAULT_USER_ID):
-        raise HTTPException(
-            status_code=409,
-            detail="No WebSocket connection"
-        )
-
     # Get prompt template
     try:
         prompt = pl.get_prompt_by_numbers(request.button_number, request.role_number, "{text}")
@@ -126,6 +119,15 @@ async def process(
 
     # Generate request ID and register
     request_id = f"req_{uuid.uuid4().hex[:8]}"
+    # If no WebSocket client is connected, accept the request but discard the
+    # result (single-machine app; POST-only client only needs an ACK).
+    if not cm.has_connection(DEFAULT_USER_ID):
+        return ProcessResponse(
+            status="ok",
+            requestId=request_id,
+            message="Received (no websocket connected; result discarded)",
+        )
+
     cancel_event = rr.register(DEFAULT_USER_ID, request_id)
 
     # Start background processing

@@ -74,7 +74,7 @@ class TestProcessRouter:
         assert data["status"] == "ok"
         assert "requestId" in data
 
-    def test_process_no_connection_returns_409(self, client, mock_connection_manager):
+    def test_process_no_connection_returns_200_and_does_not_start(self, client, mock_connection_manager, mock_request_registry):
         mock_connection_manager.has_connection = MagicMock(return_value=False)
 
         response = client.post("/api/process", json={
@@ -82,7 +82,8 @@ class TestProcessRouter:
             "button_number": 1,
             "role_number": 1
         })
-        assert response.status_code == 409
+        assert response.status_code == 200
+        mock_request_registry.register.assert_not_called()
 
     def test_process_invalid_button_returns_404(self, client, mock_prompt_loader):
         mock_prompt_loader.get_prompt_by_numbers = MagicMock(side_effect=KeyError("Unknown button"))
