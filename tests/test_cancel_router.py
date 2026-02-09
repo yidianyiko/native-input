@@ -30,18 +30,18 @@ def client(app):
 class TestCancelRouter:
     def test_cancel_returns_ok(self, client, mock_registry):
         response = client.post("/api/cancel", json={
-            "userId": "user123",
             "requestId": "req_abc123"
         })
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
-        mock_registry.cancel.assert_called_once_with("user123", "req_abc123")
+        mock_registry.cancel.assert_called_once()
+        args, kwargs = mock_registry.cancel.call_args
+        assert args[1] == "req_abc123"
 
     def test_cancel_not_found_returns_404(self, client, mock_registry):
         mock_registry.cancel = MagicMock(return_value=False)
 
         response = client.post("/api/cancel", json={
-            "userId": "user123",
             "requestId": "req_notfound"
         })
         assert response.status_code == 404

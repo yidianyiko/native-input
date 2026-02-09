@@ -31,7 +31,7 @@ def mock_request_registry():
 @pytest.fixture
 def mock_prompt_loader():
     pl = MagicMock(spec=PromptLoader)
-    pl.get_prompt = MagicMock(return_value="Formatted prompt: test")
+    pl.get_prompt_by_numbers = MagicMock(return_value="Formatted prompt: test")
     return pl
 
 
@@ -66,9 +66,8 @@ class TestProcessRouter:
     def test_process_returns_ok(self, client):
         response = client.post("/api/process", json={
             "text": "Hello",
-            "buttonId": "polish",
-            "roleId": "work_email",
-            "userId": "user123"
+            "button_number": 1,
+            "role_number": 1
         })
         assert response.status_code == 200
         data = response.json()
@@ -80,19 +79,17 @@ class TestProcessRouter:
 
         response = client.post("/api/process", json={
             "text": "Hello",
-            "buttonId": "polish",
-            "roleId": "work_email",
-            "userId": "user123"
+            "button_number": 1,
+            "role_number": 1
         })
         assert response.status_code == 409
 
     def test_process_invalid_button_returns_404(self, client, mock_prompt_loader):
-        mock_prompt_loader.get_prompt = MagicMock(side_effect=KeyError("Unknown button"))
+        mock_prompt_loader.get_prompt_by_numbers = MagicMock(side_effect=KeyError("Unknown button"))
 
         response = client.post("/api/process", json={
             "text": "Hello",
-            "buttonId": "invalid",
-            "roleId": "work_email",
-            "userId": "user123"
+            "button_number": 999,
+            "role_number": 1
         })
         assert response.status_code == 404

@@ -60,6 +60,24 @@ class PromptLoader:
         template = prompts[role_id]
         return template.format(text=text)
 
+    def _resolve_number(self, keys: list[str], n: int, kind: str) -> str:
+        if n < 1 or n > len(keys):
+            raise ValueError(f"{kind} number out of range: {n}")
+        return keys[n - 1]
+
+    def resolve_role_id(self, role_number: int) -> str:
+        roles = list(self._config.get("roles", {}).keys())
+        return self._resolve_number(roles, role_number, "role")
+
+    def resolve_button_id(self, button_number: int) -> str:
+        buttons = list(self._config.get("buttons", {}).keys())
+        return self._resolve_number(buttons, button_number, "button")
+
+    def get_prompt_by_numbers(self, button_number: int, role_number: int, text: str) -> str:
+        button_id = self.resolve_button_id(button_number)
+        role_id = self.resolve_role_id(role_number)
+        return self.get_prompt(button_id, role_id, text)
+
     def list_roles(self) -> list[str]:
         return list(self._config.get("roles", {}).keys())
 

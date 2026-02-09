@@ -2,6 +2,7 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
 from services.connection_manager import ConnectionManager
 from services.request_registry import RequestRegistry
+from services.constants import DEFAULT_USER_ID
 
 router = APIRouter()
 
@@ -28,6 +29,28 @@ def get_request_registry() -> RequestRegistry:
     return _request_registry
 
 
+@router.websocket("/ws")
+async def websocket_default_endpoint(
+    websocket: WebSocket,
+    manager: ConnectionManager = Depends(get_connection_manager),
+    registry: RequestRegistry = Depends(get_request_registry),
+):
+    await manager.connect(DEFAULT_USER_ID, websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+
+            if data.get("type") == "cancel":
+                request_id = data.get("requestId")
+                if request_id:
+                    registry.cancel(DEFAULT_USER_ID, request_id)
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        await manager.disconnect(DEFAULT_USER_ID)
+
+
 @router.websocket("/ws/{user_id}")
 async def websocket_endpoint(
     websocket: WebSocket,
@@ -35,7 +58,8 @@ async def websocket_endpoint(
     manager: ConnectionManager = Depends(get_connection_manager),
     registry: RequestRegistry = Depends(get_request_registry),
 ):
-    await manager.connect(user_id, websocket)
+    # Backwards compatibility: ignore provided user_id; this service is single-user.
+    await manager.connect(DEFAULT_USER_ID, websocket)
     try:
         while True:
             data = await websocket.receive_json()
@@ -44,9 +68,9 @@ async def websocket_endpoint(
             if data.get("type") == "cancel":
                 request_id = data.get("requestId")
                 if request_id:
-                    registry.cancel(user_id, request_id)
+                    registry.cancel(DEFAULT_USER_ID, request_id)
 
     except WebSocketDisconnect:
         pass
     finally:
-        await manager.disconnect(user_id)
+        await manager.disconnect(DEFAULT_USER_ID)

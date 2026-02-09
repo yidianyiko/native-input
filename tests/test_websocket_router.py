@@ -35,15 +35,15 @@ class TestWebSocketRouter:
         app.dependency_overrides[get_request_registry] = lambda: request_registry
 
         with TestClient(app) as client:
-            with client.websocket_connect("/ws/user123") as websocket:
-                assert connection_manager.has_connection("user123")
+            with client.websocket_connect("/ws") as websocket:
+                assert connection_manager.has_connection("default")
 
     def test_websocket_disconnects_on_close(self, app, connection_manager, request_registry):
         app.dependency_overrides[get_connection_manager] = lambda: connection_manager
         app.dependency_overrides[get_request_registry] = lambda: request_registry
 
         with TestClient(app) as client:
-            with client.websocket_connect("/ws/user123") as websocket:
+            with client.websocket_connect("/ws") as websocket:
                 pass  # Connection closes when exiting context
 
-        assert not connection_manager.has_connection("user123")
+        assert not connection_manager.has_connection("default")

@@ -10,9 +10,9 @@ class TestIntegration:
     def test_full_flow_with_websocket(self):
         with TestClient(app) as client:
             # Step 1: Connect WebSocket
-            with client.websocket_connect("/ws/integration_user") as websocket:
+            with client.websocket_connect("/ws") as websocket:
                 # Verify connection
-                assert connection_manager.has_connection("integration_user")
+                assert connection_manager.has_connection("default")
 
                 # Step 2: Send process request (will use mock agent)
                 with patch('services.agent_service.Agent') as mock_agent_class:
@@ -25,9 +25,8 @@ class TestIntegration:
 
                     response = client.post("/api/process", json={
                         "text": "Hello world",
-                        "buttonId": "polish",
-                        "roleId": "work_email",
-                        "userId": "integration_user"
+                        "button_number": 1,
+                        "role_number": 1
                     })
 
                     assert response.status_code == 200
@@ -47,21 +46,19 @@ class TestIntegration:
         with TestClient(app) as client:
             response = client.post("/api/process", json={
                 "text": "Hello",
-                "buttonId": "polish",
-                "roleId": "work_email",
-                "userId": "no_ws_user"
+                "button_number": 1,
+                "role_number": 1
             })
             assert response.status_code == 409
 
     def test_cancel_flow(self):
         with TestClient(app) as client:
-            with client.websocket_connect("/ws/cancel_user") as websocket:
+            with client.websocket_connect("/ws") as websocket:
                 # Register a request directly
-                request_registry.register("cancel_user", "test_req_123")
+                request_registry.register("default", "test_req_123")
 
                 # Cancel it
                 response = client.post("/api/cancel", json={
-                    "userId": "cancel_user",
                     "requestId": "test_req_123"
                 })
                 assert response.status_code == 200

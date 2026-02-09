@@ -9,6 +9,12 @@ class TestPromptLoader:
         result = loader.get_prompt("polish", "work_email", "Hello world")
         assert "Hello world" in result
         assert "正式商务语气" in result
+    
+    def test_get_prompt_by_numbers_returns_formatted_text(self):
+        loader = PromptLoader("config/prompts.yaml")
+        result = loader.get_prompt_by_numbers(1, 1, "Hello world")
+        assert "Hello world" in result
+        assert "正式商务语气" in result
 
     def test_get_prompt_unknown_button_raises(self):
         loader = PromptLoader("config/prompts.yaml")
@@ -19,6 +25,11 @@ class TestPromptLoader:
         loader = PromptLoader("config/prompts.yaml")
         with pytest.raises(KeyError):
             loader.get_prompt("polish", "unknown_role", "text")
+    
+    def test_get_prompt_by_numbers_out_of_range_raises(self):
+        loader = PromptLoader("config/prompts.yaml")
+        with pytest.raises(ValueError):
+            loader.get_prompt_by_numbers(999, 1, "text")
 
     def test_list_roles(self):
         loader = PromptLoader("config/prompts.yaml")

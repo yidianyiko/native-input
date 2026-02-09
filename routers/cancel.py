@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException
 
 from services.request_registry import RequestRegistry
+from services.constants import DEFAULT_USER_ID
 
 router = APIRouter()
 
@@ -21,7 +22,6 @@ def get_request_registry() -> RequestRegistry:
 
 
 class CancelRequest(BaseModel):
-    userId: str
     requestId: str
 
 
@@ -34,10 +34,10 @@ async def cancel(
     request: CancelRequest,
     rr: RequestRegistry = Depends(get_request_registry),
 ):
-    if not rr.cancel(request.userId, request.requestId):
+    if not rr.cancel(DEFAULT_USER_ID, request.requestId):
         raise HTTPException(
             status_code=404,
-            detail=f"Request {request.requestId} not found for user {request.userId}"
+            detail=f"Request {request.requestId} not found"
         )
 
     return CancelResponse(status="ok")
