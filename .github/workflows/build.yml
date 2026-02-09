@@ -92,12 +92,25 @@ jobs:
 
   client_tests:
     runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
     defaults:
       run:
         shell: bash
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install system deps (Qt + headless)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libegl1 \
+            libgl1 \
+            libxkbcommon0 \
+            libxkbcommon-x11-0 \
+            libxcb-cursor0 \
+            xvfb
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -112,4 +125,4 @@ jobs:
       - name: Run client tests
         run: |
           cd client
-          python -m pytest -q
+          xvfb-run -a python -m pytest -q
